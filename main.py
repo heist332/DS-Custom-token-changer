@@ -27,6 +27,9 @@ async def change(token):
         # requests.patch('https://discord.com/api/v9/users/@me/settings', json=data, headers={'Authorization': token}).json()
         if ('avatar' in result):
             print(f'{token} | avatar changed')
+        elif ('Rate' in result):
+            print('Rate limited. I will sleeping during 5 second')
+            time.sleep(5)
         else:
             print(f'{token} | avatar not changed')
     except:
