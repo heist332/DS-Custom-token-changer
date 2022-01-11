@@ -22,7 +22,7 @@ def randstr(lenn):
 def safeHeader(token):
     return {
         "authority": "discord.com",
-        "method": "POST",
+        "method": "PATCH",
         "scheme": "https",
         "accept": "/",
         "accept-encoding": "gzip, deflate, br",
